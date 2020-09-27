@@ -103,10 +103,22 @@ liste = [images.createImage(`
     . . . . .
     `), images.createImage(`
     . . # . .
+    . . # . .
+    . . # . .
+    . . # . .
+    . . # . .
+    `), images.createImage(`
+    . . . . .
     . # # # .
-    . # . # .
+    . . # . .
     . . # . .
     . . . . .
-    `), images.iconImage(IconNames.SmallHeart), images.iconImage(IconNames.Heart)]
+    `), images.createImage(`
+    . . . . .
+    . # . # .
+    . . # . .
+    . # . # .
+    . . . . .
+    `)]
 image = liste[i]
 image.showImage(0)
