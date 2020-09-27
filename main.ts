@@ -5,24 +5,6 @@ input.onButtonPressed(Button.A, function () {
         image.showImage(0)
     }
 })
-function compute_next_image () {
-    NewImage = images.createImage(`
-        # # # # #
-        # # # # #
-        # # # # #
-        # # # # #
-        # # # # #
-        `)
-    for (let X = 0; X <= 4; X++) {
-        for (let Y = 0; Y <= 4; Y++) {
-            // Juste une inversion pour le moment
-            if (led.pointBrightness(X, Y) > 0) {
-                NewImage.setPixel(X, Y, false)
-            }
-        }
-    }
-    return NewImage
-}
 input.onButtonPressed(Button.B, function () {
     if (i < liste.length - 1) {
         i += 1
@@ -31,13 +13,100 @@ input.onButtonPressed(Button.B, function () {
     }
 })
 input.onGesture(Gesture.Shake, function () {
-    compute_next_image().showImage(0)
+    compute_next().showImage(0)
 })
+function calc_nb_live_cells (x: number, y: number) {
+    Result = 0
+    // Verification Nord
+    if (y > 0) {
+        if (led.pointBrightness(x, y - 1) > 0) {
+            Result += 1
+        }
+        if (x - 1 >= 0 && led.pointBrightness(x - 1, y - 1) > 0) {
+            Result += 1
+        }
+        if (x + 1 < 4 && led.pointBrightness(x + 1, y - 1) > 0) {
+            Result += 1
+        }
+    }
+    // Verification Sud
+    if (y + 1 < 4) {
+        if (led.pointBrightness(x, y + 1) > 0) {
+            Result += 1
+        }
+        if (x - 1 >= 0 && led.pointBrightness(x - 1, y + 1) > 0) {
+            Result += 1
+        }
+        if (x + 1 < 4 && led.pointBrightness(x + 1, y + 1) > 0) {
+            Result += 1
+        }
+    }
+    // Vérification Ouest
+    if (x - 1 >= 0 && led.pointBrightness(x - 1, y) > 0) {
+        Result += 1
+    }
+    // Vérification Est
+    if (x + 1 < 4 && led.pointBrightness(x + 1, y) > 0) {
+        Result += 1
+    }
+    return Result
+}
+function compute_next () {
+    NewImage = images.createImage(`
+        . . . . .
+        . . . . .
+        . . . . .
+        . . . . .
+        . . . . .
+        `)
+    for (let X2 = 0; X2 <= 4; X2++) {
+        for (let Y2 = 0; Y2 <= 4; Y2++) {
+            NbcellAlive = calc_nb_live_cells(X2, Y2)
+            if (NbcellAlive < 2) {
+                NewImage.setPixel(X2, Y2, false)
+continue;
+            }
+            if (NbcellAlive > 3) {
+                NewImage.setPixel(X2, Y2, false)
+continue;
+            }
+            if (led.pointBrightness(X2, Y2) > 0 && (NbcellAlive == 2 || NbcellAlive == 3)) {
+                NewImage.setPixel(X2, Y2, true)
+continue;
+            }
+            if (led.pointBrightness(X2, Y2) == 0 && NbcellAlive == 3) {
+                NewImage.setPixel(X2, Y2, true)
+continue;
+            }
+        }
+    }
+    return NewImage
+}
+let NbcellAlive = 0
+let Result = 0
 let image: Image = null
 let liste: Image[] = []
 let i = 0
 let NewImage: Image = null
 i = 0
-liste = [images.iconImage(IconNames.Heart), images.iconImage(IconNames.Target), images.iconImage(IconNames.Ghost), images.iconImage(IconNames.SmallHeart)]
+liste = [images.createImage(`
+    . . . . .
+    . . # . .
+    . . # . .
+    . . # . .
+    . . . . .
+    `), images.createImage(`
+    . . . . .
+    . # # # .
+    . # . # .
+    . # # # .
+    . . . . .
+    `), images.createImage(`
+    . . # . .
+    . # # # .
+    . # . # .
+    . . # . .
+    . . . . .
+    `), images.iconImage(IconNames.SmallHeart), images.iconImage(IconNames.Heart)]
 image = liste[i]
 image.showImage(0)
