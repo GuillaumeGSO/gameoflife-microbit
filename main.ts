@@ -5,15 +5,15 @@ input.onButtonPressed(Button.A, function () {
         image.showImage(0)
     }
 })
+input.onButtonPressed(Button.AB, function () {
+    compute_next().showImage(0)
+})
 input.onButtonPressed(Button.B, function () {
     if (i < liste.length - 1) {
         i += 1
         image = liste[i]
         image.showImage(0)
     }
-})
-input.onGesture(Gesture.Shake, function () {
-    compute_next().showImage(0)
 })
 function calc_nb_live_cells (x: number, y: number) {
     Result = 0
@@ -25,19 +25,19 @@ function calc_nb_live_cells (x: number, y: number) {
         if (x - 1 >= 0 && led.pointBrightness(x - 1, y - 1) > 0) {
             Result += 1
         }
-        if (x + 1 < 4 && led.pointBrightness(x + 1, y - 1) > 0) {
+        if (x + 1 < 5 && led.pointBrightness(x + 1, y - 1) > 0) {
             Result += 1
         }
     }
     // Verification Sud
-    if (y + 1 < 4) {
+    if (y + 1 < 5) {
         if (led.pointBrightness(x, y + 1) > 0) {
             Result += 1
         }
         if (x - 1 >= 0 && led.pointBrightness(x - 1, y + 1) > 0) {
             Result += 1
         }
-        if (x + 1 < 4 && led.pointBrightness(x + 1, y + 1) > 0) {
+        if (x + 1 < 5 && led.pointBrightness(x + 1, y + 1) > 0) {
             Result += 1
         }
     }
@@ -46,7 +46,7 @@ function calc_nb_live_cells (x: number, y: number) {
         Result += 1
     }
     // Vérification Est
-    if (x + 1 < 4 && led.pointBrightness(x + 1, y) > 0) {
+    if (x + 1 < 5 && led.pointBrightness(x + 1, y) > 0) {
         Result += 1
     }
     return Result
@@ -90,11 +90,11 @@ let i = 0
 let NewImage: Image = null
 i = 0
 liste = [images.createImage(`
-    . . . . .
     . . # . .
     . . # . .
     . . # . .
-    . . . . .
+    . . # . .
+    . . # . .
     `), images.createImage(`
     . . . . .
     . # # # .
@@ -102,11 +102,11 @@ liste = [images.createImage(`
     . # # # .
     . . . . .
     `), images.createImage(`
+    . . . . .
     . . # . .
     . . # . .
     . . # . .
-    . . # . .
-    . . # . .
+    . . . . .
     `), images.createImage(`
     . . . . .
     . # # # .
